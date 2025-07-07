@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import { connectDb } from './config/db.js'
 
 import authRoutes from './routes/auth.js'
+import jobRoutes from './routes/jobs.js'
 
 dotenv.config()
 const app = express()
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/jobs', jobRoutes)
 
 const PORT = process.env.PORT || process.env.npm_package_config_port
 
