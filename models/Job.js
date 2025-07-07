@@ -20,9 +20,17 @@ const jobSchema = new mongoose.Schema({
     enum: ['Full-time', 'Part-time', 'Contract', 'Internship', 'Remote'],
     default: 'Full-time',
   },
-  salaryRange: {
-    type: String,
-    default: 'Not Disclosed',
+  // salaryRange: {
+  //   type: String,
+  //   default: 'Not Disclosed',
+  // },
+  minSalary: {
+    type: Number,
+    default: 0,
+  },
+  maxSalary: {
+    type: Number,
+    default: 0,
   },
   description: {
     type: String,

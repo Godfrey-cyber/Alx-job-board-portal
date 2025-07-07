@@ -33,8 +33,7 @@ export const addJob = async (req, res, next) => {
 
 		// Create the Job
 		const newJob = new Job({
-			title, description, location, requirements, employmentType, salaryRange, benefits, categories, tags, remote, views, applicationDeadline, status, postedBy: req.userId, isSyncedToElastic,
-			host: req.userId, // assuming req.userId is set by auth middleware
+			title, description, location, requirements, employmentType, salaryRange, benefits, categories, tags, remote, views, applicationDeadline, status, postedBy: req.userId, isSyncedToElastic
 		})
 		await newJob.save()
 		console.log(req.user)
@@ -47,3 +46,139 @@ export const addJob = async (req, res, next) => {
 		next()
 	}
 }
+
+export const jobs = async (req, res, next) => {
+  try {
+    const {
+      search,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      order = 'desc',
+      categories,
+      tags,
+      employmentType,
+      remote,
+      minSalary,
+      maxSalary
+    } = req.query;
+
+    const pipeline = [];
+
+    // Search filter
+    if (search) {
+      const regex = new RegExp(search, 'i');
+      pipeline.push({
+        $match: {
+          $or: [
+            { title: regex },
+            { description: regex },
+            { employmentType: regex },
+            { categories: regex }
+          ]
+        }
+      });
+    }
+
+    // Filter by categories
+    if (categories) {
+      const categoriesArray = categories.split(',').map((item) => item.trim());
+      pipeline.push({
+        $match: {
+          categories: { $in: categoriesArray }
+        }
+      });
+    }
+
+    // Filter by tags
+    if (tags) {
+      const tagsArray = tags.split(',').map((item) => item.trim());
+      pipeline.push({
+        $match: {
+          tags: { $in: tagsArray }
+        }
+      });
+    }
+
+    // Filter by employment type
+    if (employmentType) {
+      pipeline.push({
+        $match: { employmentType }
+      });
+    }
+
+    // Filter by remote
+    if (remote) {
+      const isRemote = remote === 'true';
+      pipeline.push({
+        $match: { remote: isRemote }
+      });
+    }
+
+    // Salary range filtering
+    if (minSalary || maxSalary) {
+      pipeline.push({
+        $match: {
+          ...(minSalary ? { minSalary: { $gte: Number(minSalary) } } : {}),
+          ...(maxSalary ? { maxSalary: { $lte: Number(maxSalary) } } : {})
+        }
+      });
+    }
+
+    // Sorting
+    const sortOrder = order === 'asc' ? 1 : -1;
+    pipeline.push({ $sort: { [sortBy]: sortOrder } });
+
+    // Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    pipeline.push({ $skip: skip });
+    pipeline.push({ $limit: parseInt(limit) });
+
+    // Project selected fields
+    pipeline.push({
+      $project: {
+        title: 1,
+        description: 1,
+        categories: 1,
+        location: 1,
+        tags: 1,
+        benefits: 1,
+        postedBy: 1,
+        createdAt: 1,
+        salaryRange: 1,
+        minSalary: 1,
+        maxSalary: 1,
+        remote: 1,
+        employmentType: 1,
+        slug: 1
+      }
+    });
+
+    // Run aggregation
+    const jobs = await Job.aggregate(pipeline);
+
+    // For total count
+    const countPipeline = pipeline.filter(
+      (stage) => !('$skip' in stage) && !('$limit' in stage) && !('$project' in stage)
+    );
+    countPipeline.push({ $count: 'total' });
+    const countResult = await Job.aggregate(countPipeline);
+    const total = countResult[0]?.total || 0;
+
+    // Response
+    res.status(200).json({
+      success: true,
+      count: jobs.length,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit),
+      jobs,
+    });
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error(error);
+    }
+    next(error);
+  }
+};
+
