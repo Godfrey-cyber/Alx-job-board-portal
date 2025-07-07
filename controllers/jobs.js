@@ -4,7 +4,7 @@ import slugify from 'slugify'
 
 export const addJob = async (req, res, next) => {
 	try {
-		const { title, description, location, requirements, employmentType, salaryRange, benefits, categories, tags, remote, views, applicationDeadline, status, postedBy, isSyncedToElastic  } =
+		const { title, description, location, requirements, employmentType, maxSalary, minSalary, benefits, categories, tags, remote, views, applicationDeadline, status, postedBy, isSyncedToElastic  } =
 			req.body
 
 		// Basic validation
@@ -12,7 +12,8 @@ export const addJob = async (req, res, next) => {
 			!title ||
 			!description ||
 			!employmentType ||
-			!salaryRange ||
+			!maxSalary ||
+			!minSalary ||
 			!requirements ||
 			!location ||
 			!benefits || 
@@ -33,7 +34,7 @@ export const addJob = async (req, res, next) => {
 
 		// Create the Job
 		const newJob = new Job({
-			title, description, location, requirements, employmentType, salaryRange, benefits, categories, tags, remote, views, applicationDeadline, status, postedBy: req.userId, isSyncedToElastic
+			title, description, location, requirements, employmentType, maxSalary, minSalary, benefits, categories, tags, remote, views, applicationDeadline, status, postedBy: req.userId, isSyncedToElastic
 		})
 		await newJob.save()
 		console.log(req.user)
@@ -182,3 +183,24 @@ export const jobs = async (req, res, next) => {
   }
 };
 
+// my jobs
+export const myJobs = async (req, res, next) => {
+	try {
+		// Optionally verify req.userId exists
+	    if (!req.userId) {
+	      return res.status(401).json({ success: false, message: 'Unauthorized. User ID missing.' });
+	    }
+
+		const jobs = await Job.find({ postedBy: req.userId })
+			.populate('postedBy', 'firstName email')
+			.sort({ createdAt: -1 })
+		res.status(200).json({
+			success: true,
+			count: jobs.length,
+			jobs,
+		})
+	} catch (error) {
+		console.log(error)
+		next(error)
+	}
+}
