@@ -43,7 +43,54 @@ export const register = async (req, res, next) => {
 }
 
 export const login = async (req, res, next) => {
-	
+	try {
+		const { password, email } = req.body
+		if (!email || !password) {
+			return res.status(400).json({ msg: '❌ Please fill in all fields' })
+		}
+
+		// Validate email & password format
+		try {
+			validateEmail(email)
+			validatePassword(password)
+		} catch (error) {
+			return res.status(400).json({ msg: error.message })
+		}
+
+		// check if user exists
+		// const user = await User.findOne({ email })
+		const user = await User.findOne({ email }).select('+password')
+		if (!user) {
+			return res.status(400).json({ msg: '🚫 This email does not exist!' })
+		}
+
+		const ifPasswordIsCorrect = await bcrypt.compare(password, user.password)
+		if (!ifPasswordIsCorrect) {
+			return res.status(400).json({ msg: '🚫 Invalid email or password.' })
+		}
+
+		// Generate tokens
+		const accessToken = createAccessToken(user._id)
+		const refreshToken = createRefreshToken(user._id)
+
+		user.refreshTokens.push(refreshToken)
+		await user.save()
+
+		// console.log(userData)
+		// Send refresh token to the front-end
+		res.cookie('refreshToken', refreshToken, {
+			path: '/',
+			httpOnly: true,
+			maxAge: 86400000,
+			sameSite: 'Strict',
+			secure: process.env.NODE_ENV === 'production',
+		})
+		res.status(200).json({ accessToken, user })
+	} catch (error) {
+		console.log(error.message)
+		console.log(error)
+		next(error)
+	}
 }
 
 // logout user

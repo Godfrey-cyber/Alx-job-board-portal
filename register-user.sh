@@ -3,10 +3,10 @@
 echo "=== User Registration ==="
 
 # Prompt for firstname
-read -p "Enter firstname: " firstname
+read -p "Enter firstname: " firstName
 
 # Prompt for lastname
-read -p "Enter lastname: " lastname
+read -p "Enter lastname: " lastName
 
 # Prompt for email
 read -p "Enter email: " email
@@ -18,7 +18,7 @@ echo
 # Send POST request using curl
 response=$(curl -s -w "%{http_code}" -o /tmp/response.json -X POST http://localhost:6000/api/v1/auth/register-user \
   -H "Content-Type: application/json" \
-  -d "{\"firstname\":\"$firstname\", \"lastname\":\"$lastname\", \"email\":\"$email\", \"password\":\"$password\"}")
+  -d "{\"firstName\":\"$firstName\", \"lastName\":\"$lastName\", \"email\":\"$email\", \"password\":\"$password\"}")
 
 # Extract response code
 http_code=$(tail -n1 <<< "$response")
