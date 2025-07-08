@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import dotenv from 'dotenv'
+import dotenv from 'dotenv-flow'
 // import helmet from "helmet"
 import { connectDb } from './config/db.js'
 
@@ -42,4 +42,5 @@ const PORT = process.env.PORT || process.env.npm_package_config_port
 
 app.listen(PORT, () => {
 	console.log(`Success 💯! Servers running on port: ${PORT} 👍👍`)
+	console.log(`Running on ${process.env.NODE_ENV} environment`)
 })

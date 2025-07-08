@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
+    "dev": "NODE_ENV=development nodemon index.js.js",
+    "start": "NODE_ENV=production node index.js",
+    "staging": "NODE_ENV=staging node index.js.js",
     "test": "jest",
     "build": "webpack --mode production",
     "lint": "eslint . --fix",
@@ -20,6 +21,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "dotenv-flow": "^4.1.0",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
@@ -30,7 +32,7 @@
     "uuid": "^11.1.0"
   },
   "config": {
-    "port": "6000"
+    "port": "8000"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",
