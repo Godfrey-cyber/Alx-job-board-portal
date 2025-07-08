@@ -95,12 +95,70 @@ export const login = async (req, res, next) => {
 
 // logout user
 export const logout = async (req, res, next) => {
-	
+	try {
+		const refreshToken = req.cookies.refreshToken
+		if (!refreshToken) return res.status(400).json({ msg: '🚫 No refresh token provided' })
+
+		// Find user and remove refresh token
+		const user = await User.findOneAndUpdate(
+			{ refreshTokens: refreshToken },
+			{ $pull: { refreshTokens: refreshToken } },
+			{ new: true }
+		)
+
+		if (!user) return res.status(400).json({ msg: '🚫 Invalid refresh token' })
+
+		res.clearCookie('refreshToken', { path: '/' })
+		res.status(200).json({ msg: '✅ Logged out successfully' })
+	} catch (error) {
+		console.error(error)
+		next(error)
+	}
 }
 
 // Change Password
 export const changePassword = async (req, res, next) => {
-	
+	try {
+		const { previousPassword, password } = req.body
+		// Validate user fields
+		if (!previousPassword || !password) return res.status(400).json({ message: '❌ Please enter all fields.' })
+		// Validate password format
+		try {
+			validatePassword(password)
+		} catch (error) {
+			return res.status(400).json({ msg: error.message })
+		}
+		// Fetch user from the database
+		const user = await User.findById(req.userId)
+		console.log(req.userId)
+		console.log('before', user)
+		if (!user) {
+			return res.status(401).json({ message: '❌ User not found. Please log in again.' })
+		}
+		console.log('After', user)
+
+		// Check if the previous password matches the user's current password
+		const isPasswordMatch = await bcrypt.compare(previousPassword, user.password)
+		console.log('user', user)
+		console.log('is password match', isPasswordMatch)
+
+		if (!isPasswordMatch) {
+			return res.status(400).json({
+				message: '🚫 Passwords did not match, please try again❗',
+			})
+		}
+
+		// Update and save the new password
+		user.password = password
+		await user.save()
+
+		res.status(200).json({
+			message: '✅ Password has been changed successfully!',
+		})
+	} catch (error) {
+		next()
+		console.log(error)
+	}
 }
 
 // Refresh Access Token
