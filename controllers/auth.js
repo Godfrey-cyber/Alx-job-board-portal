@@ -163,5 +163,32 @@ export const changePassword = async (req, res, next) => {
 
 // Refresh Access Token
 export const refreshAccessToken = async (req, res, next) => {
-	
+	try {
+		const refreshToken = req.cookies.refreshToken
+
+		if (!refreshToken) {
+			return res.status(401).json({ msg: '🚫 No refresh token provided' })
+		}
+
+		// Verify refresh token
+		jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+			if (err) {
+				return res.status(403).json({ msg: '🚫 Invalid refresh token' })
+			}
+
+			// Check if user exists
+			const user = await User.findById(decoded.userId).select('-password')
+			if (!user || !user.refreshTokens.includes(refreshToken)) {
+				return res.status(403).json({ msg: '🚫 User not found' })
+			}
+
+			// Generate new access token
+			const accessToken = createAccessToken(user._id)
+
+			res.status(200).json({ accessToken, user })
+		})
+	} catch (error) {
+		console.error(error)
+		next(error)
+	}
 }
