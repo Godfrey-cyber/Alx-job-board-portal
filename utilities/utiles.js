@@ -35,6 +35,14 @@ export const validatePassword = (password) => {
 	}
 }
 
+export const allowedUpdates = (job, requestObject, allowedfields) => {
+	for(const key of allowedfields) {
+		if (requestObject[key] !== undefined) {
+			job[key] = requestObject[key]
+		}
+	}
+}
+
 export const mongoDbConnection = (res) => {
 	if (mongoose.connection.readyState !== 1) {
 		return res.status(500).json({ status: 'Fail', msg: 'Database not connected' })

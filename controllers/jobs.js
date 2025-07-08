@@ -1,6 +1,8 @@
 import Job from '../models/Job.js'
+import mongoose from 'mongoose'
 import Counter from '../models/Counter.js'
 import slugify from 'slugify'
+import { allowedUpdates } from "../utilities/utiles.js"
 
 export const addJob = async (req, res, next) => {
 	try {
@@ -187,8 +189,8 @@ export const jobs = async (req, res, next) => {
 export const myJobs = async (req, res, next) => {
 	try {
 		// Optionally verify req.userId exists
-	    if (!req.userId) {
-	      return res.status(401).json({ success: false, message: 'Unauthorized. User ID missing.' });
+	    if (!req.userId || !mongoose.Types.ObjectId.isValid(req.userId)) {
+	      return res.status(401).json({ success: false, message: 'Unauthorized or User ID missing.' });
 	    }
 
 		const jobs = await Job.find({ postedBy: req.userId })
@@ -202,5 +204,41 @@ export const myJobs = async (req, res, next) => {
 	} catch (error) {
 		console.log(error)
 		next(error)
+	}
+}
+// update a job
+export const editJob = async (req, res, next) => {
+	try {
+		const { id } = req.params
+		const job = await Job.findById(id)
+
+		if (!job) {
+			return res.status(404).json({ success: false, message: 'Job not found.' })
+		}
+
+		const allowedFields = [
+			'title',
+			'description',
+			'maxSalary',
+			'minSalary',
+			'categories',
+			'location',
+			'benefits',
+			'tags',
+			'remote',
+			'applicationDeadline',
+			'status'
+		]
+
+		allowedUpdates(job, req.body, allowedFields)
+		const updated = await job.save()
+		res.status(200).json({
+			success: true,
+			message: '✅ Job updated successfully!',
+			data: updated,
+		})
+	} catch (error) {
+		console.log(error)
+		next()
 	}
 }
