@@ -6,7 +6,12 @@ const reviewSchema = new mongoose.Schema({
 		ref: 'Job',
 		required: true,
 	},
-	user: {
+	freelancer: { // freelancer being reviewed
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+		required: true,
+	},
+	employer: { // this is the employer who reviews the freelancer's work
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 		required: true,

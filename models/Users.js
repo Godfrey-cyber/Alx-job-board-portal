@@ -13,6 +13,20 @@ const UserSchema = new mongoose.Schema(
 			enum: ['frelancer', 'employer', 'admin'],
 			default: 'frelancer',
 		},
+		reviews: [
+		    {
+		      type: mongoose.Schema.Types.ObjectId,
+		      ref: 'Review',
+		    },
+		],
+		averageRating: {
+		    type: Number,
+		    default: 0,
+		},
+		totalReviews: { 
+		    type: Number, 
+		    default: 0 
+		},
 		refreshTokens: [{ type: String }],
 		verified: { type: Boolean, default: false },
 	},

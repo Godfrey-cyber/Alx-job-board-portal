@@ -7,6 +7,7 @@ import { connectDb } from './config/db.js'
 
 import authRoutes from './routes/auth.js'
 import jobRoutes from './routes/jobs.js'
+import jobReviews from './routes/reviews.js'
 
 dotenv.config()
 const app = express()
@@ -16,7 +17,6 @@ const allowedOrigins = ['https://alx-tour-destination.vercel.app', 'http://local
 app.use(
 	cors({
 		origin: function (origin, callback) {
-			// allow requests with no origin (like mobile apps, curl, Postman)
 			if (!origin) return callback(null, true)
 			if (allowedOrigins.includes(origin)) {
 				return callback(null, true)
@@ -37,6 +37,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/jobs', jobRoutes)
+app.use('/api/v1/reviews', jobReviews)
 
 const PORT = process.env.PORT || process.env.npm_package_config_port
 

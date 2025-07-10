@@ -20,10 +20,21 @@ const jobSchema = new mongoose.Schema({
     enum: ['Full-time', 'Part-time', 'Contract', 'Internship', 'Remote'],
     default: 'Full-time',
   },
-  // salaryRange: {
-  //   type: String,
-  //   default: 'Not Disclosed',
-  // },
+  // Reviews
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review',
+    },
+  ],
+  averageRating: {
+    type: Number,
+    default: 0,
+  },
+  totalReviews: { 
+    type: Number, 
+    default: 0 
+  },
   minSalary: {
     type: Number,
     default: 0,
