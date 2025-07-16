@@ -242,3 +242,21 @@ export const editJob = async (req, res, next) => {
 		next()
 	}
 }
+
+export const getJob = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const result = await Job.findById(id).populate('employer', 'firstName email')
+    if (!result) {
+      return res.status(404).json({ success: false, message: 'Sorry! No job found.' })
+    }
+    console.log("hello", result)
+    res.status(200).json({
+      success: true,
+      result,
+    })
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
