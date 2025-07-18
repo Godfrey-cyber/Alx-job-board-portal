@@ -13,7 +13,7 @@ dotenv.config()
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
-const allowedOrigins = ['https://alx-tour-destination.vercel.app', 'http://localhost:5173']
+const allowedOrigins = ['https://alx-job-board-portal.vercel.app/', 'http://localhost:5173']
 app.use(
 	cors({
 		origin: function (origin, callback) {
