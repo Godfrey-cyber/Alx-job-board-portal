@@ -3,6 +3,7 @@ import { IoLocationOutline } from 'react-icons/io5';
 import { FaShareNodes, FaHeart } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
 import { axiosInstance } from '../utilities/utilities.js';
+import { formatDistanceToNow } from 'date-fns'
 import { useDispatch, useSelector } from 'react-redux';
 import Header from "../components/Header.jsx"
 import Footer from "../components/Footer.jsx"
@@ -42,13 +43,22 @@ const Job = () => {
 		getJobs();
 		return () => controller.abort();
 	}, [id, accessToken]);
+
+	const date = job.createdAt
+	console.log("createdAt", job.createdAt)
+	console.log("parsedData", new Date(job.createdAt))
+	// console.log(formatDistanceToNow(new Date(job.createdAt), { addSuffix: true }))
 	return (
 		<div className="w-full bg-white h-fit">
 			<Header />
 			<div className="w-full h-full px-2 md:px-10 lg:px-20 my-8">
 				<span className="min-h-36 bg-white w-full flex flex-col space-y-3">
 					<p className="text-xl font-semibold text-gray-800">{job?.title}</p>
-					<p className="text-sm font-normal text-gray-500">Posted 56 Mins ago</p>
+					{job.createdAt && !isNaN(new Date(job.createdAt)) && (
+					  <p className="text-sm font-normal text-gray-500">Posted {" "}
+					    {formatDistanceToNow(new Date(job.createdAt), { addSuffix: true })}
+					  </p>
+					)}
 					<p className="text-sm font-normal text-gray-500">{job.industry}</p>
 				</span>
 				<hr className="border border-gray-300 my-3" />

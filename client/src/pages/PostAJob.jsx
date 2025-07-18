@@ -5,12 +5,14 @@ import Select from 'react-select';
 import countryList from 'react-select-country-list';
 import axios from "axios"
 import { useSelector } from 'react-redux'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 // files
 import Header from '../components/Header.jsx';
 import { industry, options, jobTypes, employmentMode, workBenefits, footerLinks, experienceLevel } from "../assets/dummyData.js"
 import { axiosInstance } from "../utilities/utilities.js"
 
-const ListProperty = () => {
+const PostAJob = () => {
 	const [uploading, setUploading] = useState(false);
 	const { user, loading, error, accessToken, isAuthenticated } = useSelector(
 		state => state.auth
@@ -60,7 +62,6 @@ const ListProperty = () => {
 		});
 		if (res.status === 201) {
 			console.log(res.data)
-	    	alert('Job created!');
 	    	setFormData({
 	    		title: "",
 				description: "",
@@ -76,11 +77,14 @@ const ListProperty = () => {
 				experienceLevel: "",
 				applicationDeadline: ""
 	    	})
+	    	toast.success("Successfully Created a Job in🥇")
+	    	console.log(res.data.job)
+	    	// navigate()
 		}
 	    // Optionally reset formData here
 	  } catch (error) {
 	    console.error('Error creating job:', error);
-	    alert('Error creating job');
+	    toast.error(err?.response?.data?.msg)
 	  }
 	};
 	return (
@@ -307,4 +311,4 @@ const ListProperty = () => {
 	);
 };
 
-export default ListProperty;
+export default PostAJob;

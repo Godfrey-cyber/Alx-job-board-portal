@@ -27,7 +27,7 @@ const ScrollUpward = () => {
 
 
 	return (
-		visible && (<div onClick={scrollToTop} className="flex fex-col justify-center items-center text-white hover:text-red-800 bg-red-800 hover:bg-white hover:border-red-800 rounded-full border-3 border-white h-12 w-12 fixed bottom-20 right-10 transition-all delay-300 animate-bounce ">
+		visible && (<div onClick={scrollToTop} className="flex fex-col justify-center items-center text-white hover:text-red-800 bg-red-800 hover:bg-white hover:border-red-800 rounded-full border-3 border-white h-12 w-12 fixed bottom-6 right-8 transition-all delay-300 animate-bounce ">
 			<FaChevronUp className="h-6 w-6 text-white hover:text-amber-600 cursor-pointer hover:animate-ping" />
 		</div>)
 	)

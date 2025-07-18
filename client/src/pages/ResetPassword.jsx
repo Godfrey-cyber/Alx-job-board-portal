@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-// import ReactQuill from 'react-quill';
-// import 'react-quill/dist/quill.snow.css';
-import { modules } from "../utilities/utilities.js"
 
 const ResetPassword = () => {
 	const [description, setDescription] = useState('');

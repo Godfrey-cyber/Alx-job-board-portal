@@ -72,7 +72,7 @@ const Signup = () => {
 	};
 	return (
 		<div className="flex flex-col bg-white h-screen justify-center items-center w-full px-3 md:px-10 lg:px-20">
-			<div className="flex flex-col space-y-6 h-92 w-1/3">
+			<div className="flex flex-col space-y-6 h-92 w-full lg:w-1/3">
 				<div className="flex flex-col space-y-3">
 					<p className="text-lg font-bold text-red-800">
 						Sign up or create an account
