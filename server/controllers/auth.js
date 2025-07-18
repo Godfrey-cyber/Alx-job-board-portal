@@ -73,7 +73,7 @@ export const login = async (req, res, next) => {
 		const accessToken = createAccessToken(user._id)
 		const refreshToken = createRefreshToken(user._id)
 
-		if(user.refreshTokens) user.refreshTokens = []
+		if(!user.refreshTokens) user.refreshTokens = []
 		user.refreshTokens.push(refreshToken)
 		await user.save()
 
