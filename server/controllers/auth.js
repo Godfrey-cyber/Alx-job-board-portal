@@ -82,8 +82,8 @@ export const login = async (req, res, next) => {
 		res.cookie('refreshToken', refreshToken, {
 			path: '/',
 			httpOnly: true,
-			maxAge: 1000 * 60 * 60 * 24, // 1 day
-			sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax',
+			maxAge: 1000 * 60 * 60 * 24 * 7, // 1 day
+			sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
 			secure: process.env.NODE_ENV === 'production',
 		})
 		const { _id, firstName, lastName } = user
