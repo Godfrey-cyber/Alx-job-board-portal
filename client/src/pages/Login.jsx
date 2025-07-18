@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { loginStart, loginFailure, loginSuccess } from '../redux/authSlice.js';
 import { axiosInstance } from '../utilities/utilities.js';
@@ -24,7 +25,7 @@ const Login = () => {
 			[event.target.name]: event.target.value,
 		}));
 	};
-
+	console.log(loginData)
 	const handleSubmit = async event => {
 		event.preventDefault();
 		dispatch(loginStart());
@@ -39,18 +40,18 @@ const Login = () => {
 					setLoginData({ email: '', password: '' });
 					navigate('/');
 					console.log(res);
-					// toast.success("Successfully Logged in🥇")
+					toast.success("Successfully Logged in🥇")
 				}
 			} catch (err) {
 				if (err || !res.status === 200 || !res.statusText === 'OK') {
 					dispatch(loginFailure(err?.response?.data.msg));
 					setLoginData({ email: '', password: '' });
-					// toast.error(err?.response?.data?.msg)
+					toast.error(err?.response?.data?.msg)
 					console.log(err);
 				}
 			}
 		} else {
-			// toast.error('Soory! • Cannot log you without credentials')
+			toast.error('Soory! • Cannot log you without credentials')
 			console.log('error', error);
 		}
 	};
@@ -61,7 +62,7 @@ const Login = () => {
 	return (
 		<div className="flex flex-col bg-white h-screen justify-center items-center bg-red-400 w-full">
 			<div className="grid grid-cols-12 ">
-				<div className="col-span-4 flex flex-col items-center justify-center space-y-3 px-8 w-full">
+				<div className="col-span-12 lg:col-span-4 flex flex-col items-center justify-center space-y-3 px-8 w-full">
 					<div className="flex flex-col space-y-3">
 						<p className="text-2xl font-bold text-red-800">
 							Log in and get <br/> productive
@@ -139,7 +140,7 @@ const Login = () => {
 						</div>
 					</div>
 				</div>
-				<div className="col-span-8 flex flex-col h-full">
+				<div className="col-span-12 lg:col-span-8 hidden lg:flex flex-col h-full">
 					<img src="https://www.hercjobs.org/wp-content/uploads/2020/07/Is-now-a-good-time-to-look-for-a-job-HERC.jpg" alt="" />
 				</div>
 			</div>
