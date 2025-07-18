@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import ReactQuill from 'react-quill';
+// import 'react-quill/dist/quill.snow.css';
 import { modules } from "../utilities/utilities.js"
 
 const ResetPassword = () => {
@@ -27,16 +27,16 @@ const ResetPassword = () => {
       {/* Title, Location, etc. */}
 
       <label>Job Description</label>
-      <ReactQuill value={description} onChange={setDescription} />
+      {/*<ReactQuill value={description} onChange={setDescription} />*/}
 
       <label>Responsibilities</label>
-      <ReactQuill value={responsibilities} onChange={setResponsibilities} />
+      {/*<ReactQuill value={responsibilities} onChange={setResponsibilities} />*/}
 
       <label>Qualifications</label>
-      <ReactQuill value={qualifications} onChange={setQualifications} />
+      {/*<ReactQuill value={qualifications} onChange={setQualifications} />*/}
 
       <label>Skills</label>
-      <ReactQuill value={skills} onChange={setSkills} />
+      {/*<ReactQuill value={skills} onChange={setSkills} />*/}
 
       <button type="submit">Submit Job</button>
     </form>
