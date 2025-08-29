@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon index.js.js",
+    "dev": "NODE_ENV=development nodemon index.js",
     "start": "NODE_ENV=production node index.js",
-    "staging": "NODE_ENV=staging node index.js.js",
+    "staging": "NODE_ENV=staging node index.js",
     "test": "jest",
     "build": "webpack --mode production",
     "lint": "eslint . --fix",
