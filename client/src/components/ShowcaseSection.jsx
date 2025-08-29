@@ -36,18 +36,18 @@ const ShowcaseSection = () => {
 		try {
 		    const res = await axiosInstance.get(`/jobs/get-jobs?${params.toString()}`);
 			if (res.status === 200) {
-				console.log(res.data)
-		    	alert('Job retrived!');
+				console.log(res.data.jobs)
+		    	// alert('Job retrived!');
 		    	setFormData({
 					location: "",
 					industry: "",
 					experienceLevel: "",
 		    	})
-		    	navigate(`/jobs/search/${params.toString()}`)
+		    	navigate(`/jobs/search?${params.toString()}`)
 			}
 		} catch (error) {
 		    console.error('Error retrieving job:', error);
-		    alert('Error retrieving job');
+		    // alert('Error retrieving job');
 		 }
 	};
 

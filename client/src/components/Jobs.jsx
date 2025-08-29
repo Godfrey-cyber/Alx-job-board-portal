@@ -22,9 +22,11 @@ const Jobs = () => {
 				}
 			} catch (error) {
 				if (error.name === 'CanceledError') {
-					console.log('Request canceled');
+					// toast.error('Soory! • An error occured')
+					console.log(error, "An error happened")
 				} else {
-					console.log('User not authenticated', error);
+					// toast.error('Soory! • An error occured')
+					console.log(error, "An error happened")
 				}
 			}
 		};
@@ -33,9 +35,9 @@ const Jobs = () => {
 	}, []);
 	return (
 		<div className="flex flex-col w-full h-auto px-2 md:px-10 lg:px-20 bg-white my-12">
-			<div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 overflow-x-auto my-6 w-full scroll-smooth">
+			<div className="grid grid-cols-12 gap-4 overflow-x-auto my-6 w-full scroll-smooth">
 					{jobs && jobs?.slice(0, 8).map(item => (
-						<div key={item._id} onClick={() => navigate(`/job/${item._id}`)} className="flex flex-col space-y-4 p-4 border border-gray-400 rounded-md w-52 h-48 lg:w-62 lg:w-72 cursor-pointer">
+						<div key={item._id} onClick={() => navigate(`/job/${item._id}`)} className="flex flex-col col-span-12 md:col-span-6 lg:col-span-3 justify-self-center space-y-4 p-4 border border-gray-400 rounded-md w-64 h-48 lg:w-62 lg:w-72 cursor-pointer">
 							<p className="text-sm text-gray-800 font-semibold">{item.title}</p>
 							<p className="text-xs text-gray-800 font-semibold">{item.title}</p>
 							<p className="text-sm text-gray-500 font-normal">Max Salary Ksh. {item.maxSalary}</p>

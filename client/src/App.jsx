@@ -54,7 +54,7 @@ function App() {
                     <Route path="/user/post-a-job" element={accessToken ? <PostAJob /> : <LandingPage />} />
                     <Route path="/job/:id" element={<Job />} />
                     <Route path="/companies-hiring" element={<CompaniesHiring />} />
-                    <Route path="/jobs/search/:params" element={<SearchJobs />} />
+                    <Route path="/jobs/search" element={<SearchJobs />} />
                     <Route path="/account/signup" element={<Signup />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                     <Route
